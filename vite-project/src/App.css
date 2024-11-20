@@ -1,0 +1,18 @@
+#App {
+  background-color: rgb(23, 29, 40);
+  width: 100vw;
+  height: 100vh;
+}
+
+
+html, body {
+    background-color: rgb(23, 29, 40); /* Set the global background color */
+    margin: 0; /* Remove default margins */
+    padding: 0; /* Remove default padding */
+    height: 100vh; /* Ensure the body spans the viewport */
+}
+
+#root {
+    height: 100%; /* Allow React's root div to fill the body */
+}
+
