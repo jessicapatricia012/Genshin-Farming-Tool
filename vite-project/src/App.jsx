@@ -5,8 +5,10 @@ import "./App.css";
 function App() {
   return (
     <div id="App">
+      <CharComponent></CharComponent>
       <ToFarmComponent></ToFarmComponent>
     </div>
+
   );
 }
 

@@ -1,0 +1,36 @@
+#charComponent {
+    margin-top: 10vh;
+    margin-left: 10vw;
+    color: white;
+    display: flex;
+    gap: 15px;
+}
+
+#addBtn {
+    background-color: rgb(23, 29, 40);
+    height: 35px;
+    width: 35px;
+
+    color: rgb(237, 236, 200);
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 30px;  
+
+
+    border-width: 3px;
+    border-style: solid;
+    border-color:rgb(237, 236, 200);
+    border-radius: 10px;
+} 
+
+#addBtn:hover {
+    color: rgb(23, 29, 40);
+    background-color: rgb(243, 239, 139);
+    font-weight: bolder;
+
+}
+
+#addBtn:active {
+    color: transparent;
+} 
