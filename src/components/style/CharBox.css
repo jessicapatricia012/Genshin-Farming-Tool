@@ -1,0 +1,57 @@
+.charBox {
+    background-color: rgb(32, 40, 54);
+    height: 180px;
+    border-radius: 50px;
+    margin-bottom: 40px;
+    margin-top: -25px;
+    width: 95%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.fa-grip-lines {
+    color: rgb(57, 68, 86); 
+    position:absolute;
+    top: 40%;
+    right: 15px;
+    font-size: 35px;
+}
+
+.fa-grip-lines:hover {
+    color: rgb(86, 97, 115); 
+
+}
+
+
+#charImage{
+    height: 100px;
+    width: 80px;
+    background-color: rgb(77, 77, 77);
+    margin-top: 40px;
+    margin-left: 50px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* #checkBoxes {
+    margin-top: 45px;
+    display: flex;
+    flex-direction: column;
+
+} */
+
+
+#checkBoxes {
+    margin-top: 45px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+}
+
+input {
+    accent-color:rgb(243, 239, 139);
+}
+
