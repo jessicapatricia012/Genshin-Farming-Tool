@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./style/CharBox.css";
 import genshin from "genshin-db";
 import PickChar from "./PickChar";
 
-function CharBox({ onImageClick }) {
+function CharBox({ onImageClick, selectedCharacter, isSelected, charName }) {
+  
+  useEffect(() => {
+    if (charName) {
+      console.log(charName);  // This will log charName when it's available
+      console.log("a");
+    }
+  }, [charName]);
+
 
   return (
     <div className="charBox">
-      <div id="charImage" onClick={onImageClick}>foto</div>
+      <div id="charImage" onClick={onImageClick}>{charName || 'Select Character'}</div>
 
       <div id="checkBoxes">
         <label>

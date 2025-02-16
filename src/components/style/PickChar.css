@@ -4,10 +4,38 @@
     padding: auto;
     overflow-y: scroll;
 
-    
 }
 
 #icons{
     display: flex;
     flex-wrap: wrap;
+    /* padding-left: 0.5vw; */
+    padding-top: 10px;
+    justify-content: center; /* Center the items inside the flex container */
+    align-items: center;
+}
+
+#icon{
+    cursor: pointer;
+    margin : 10px;
+    width: 100px;
+    height: 122px;
+}
+
+.pickChar::-webkit-scrollbar {
+    width: 8px;              /* Width of the vertical scrollbar */
+}
+  
+.pickChar::-webkit-scrollbar-track {
+    background-color: rgb(27, 33, 45); /* Background color of the scrollbar track */
+}
+  
+.pickChar::-webkit-scrollbar-thumb {
+    background-color: rgb(184,179,182);
+    border-radius: 10px;   
+
+}
+  
+.pickChar::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(202, 199, 201); /* Color of the thumb on hover */
 }

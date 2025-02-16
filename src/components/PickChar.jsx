@@ -3,7 +3,7 @@ import "./style/PickChar.css";
 import CharIcon from "./CharIcon";
 import genshindb from 'genshin-db';
 
-function PickChar({ onClose }) {
+function PickChar({ onClose, onSelectCharacter }) {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,16 +19,22 @@ function PickChar({ onClose }) {
     }
   }, []);
 
+  const handleClick = (characterName) => {
+    onSelectCharacter(characterName); 
+    // console.log(characterName);
+  };
 
   return (
     <div className="pickChar">
-      <button onClick={onClose}>Close</button>
+      <button onClick={onClose}>X</button>
       <div id="icons">
         {loading ? (
           <p>Loading characters...</p>
         ) : (
           characters.map((character, index) => (
-            <CharIcon key={index} character={character} />
+            <div id="icon" key={index} onClick={() => handleClick(character)}>
+              <CharIcon characterName={character} />
+            </div>          
           ))
         )}
       </div>
