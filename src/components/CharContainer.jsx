@@ -3,11 +3,11 @@ import './style/CharContainer.css';
 import CharBox from './CharBox.jsx';
 
 
-function CharContainer() {
+function CharContainer({ onImageClick }) {
   const [charComponents, setCharComponents] = useState([]);
 
   const addChar = () => {
-    setCharComponents([...charComponents, <CharBox key={charComponents.length} />]);
+    setCharComponents([...charComponents, <CharBox key={charComponents.length} onImageClick={onImageClick}/>]);
   };
 
   return (

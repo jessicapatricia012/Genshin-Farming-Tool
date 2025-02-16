@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "./style/CharBox.css";
 import genshin from "genshin-db";
+import PickChar from "./PickChar";
 
-function CharBox() {
+function CharBox({ onImageClick }) {
+
   return (
     <div className="charBox">
-      <div id="charImage">foto</div>
+      <div id="charImage" onClick={onImageClick}>foto</div>
 
       <div id="checkBoxes">
         <label>

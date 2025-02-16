@@ -1,0 +1,17 @@
+.slidingPanel{
+    position: fixed;
+    width:30vw;
+    height: 100%;
+    color: green;
+    background-color: #e50a0a;
+    transition: left 3s ease; 
+    z-index: 9999;
+}
+
+.slidingPanel.active {
+    left: 0; 
+    background-color: #e50a0a;
+    transform: translateX(18vw); 
+
+}
+  

@@ -1,0 +1,13 @@
+.pickChar{
+    width: 100%;
+    height: 100%;
+    padding: auto;
+    overflow-y: scroll;
+
+    
+}
+
+#icons{
+    display: flex;
+    flex-wrap: wrap;
+}

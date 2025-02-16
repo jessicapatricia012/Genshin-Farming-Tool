@@ -18,3 +18,28 @@ html, body {
     height: 100%; /* Allow React's root div to fill the body */
 }
 
+#contentWrapper {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  transition: transform 0.3s ease; 
+}
+
+#contentWrapper.shifted {
+  transform: translateX(18vw); 
+}
+
+#slidingPanel {
+  position: fixed;
+  width: 30vw;
+  height: 100%;
+  color: green;
+  left: -30vw; /* Initially off-screen */
+  transition: left 0.3s ease; /* Transition for sliding in and out */
+  z-index: 1000; /* Make sure it's on top */
+  background-color:rgb(37, 46, 62);
+}
+
+#slidingPanel.shifted {
+  left: 0;
+}
