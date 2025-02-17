@@ -3,7 +3,7 @@ import "./style/PickPanel.css";
 import Icon from "./Icon";
 import genshindb from 'genshin-db';
 
-function PickChar({ onSelectCharacter }) {
+function PickChar({ onSelectCharacter, charComponents }) {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +38,9 @@ function PickChar({ onSelectCharacter }) {
           <p>Loading characters...</p>
         ) : (
           characters.map((character, index) => (
-            <div className="icon" key={index} onClick={() => handleClick(character)}>
+            <div 
+            className={`icon ${charComponents.some((component) => component.name === character) ? 'disabled' : ''}`}             key={index} 
+            onClick={() => handleClick(character)}>
               <Icon name={character} type="character" />
             </div>          
           ))

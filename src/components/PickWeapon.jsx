@@ -3,10 +3,11 @@ import "./style/PickPanel.css";
 import genshindb from 'genshin-db';
 import Icon from "./Icon";
 
-function PickWeapon({ weaponType, onSelectWeapon }) {
+function PickWeapon({ weaponType, onSelectWeapon, selectedWeapon }) {
 
     const [weapons, setWeapons] = useState([]);
     const [loading, setLoading] = useState(true);
+    // const [selectedWeapon, setSelectedWeapon] = useState(null); // State to store the selected weapon
 
     useEffect(() => {
         setLoading(true);  
@@ -25,8 +26,15 @@ function PickWeapon({ weaponType, onSelectWeapon }) {
         }
       }, [weaponType]); 
 
-    const handleClick = (weapon) => {
-        onSelectWeapon(weapon); 
+      const handleClick = (weapon) => {
+        // If the same weapon is clicked again, unselect it, otherwise select the new weapon
+        if (selectedWeapon === weapon) {
+            // setSelectedWeapon(null);
+            onSelectWeapon(null); // Unselect weapon
+        } else {
+            // setSelectedWeapon(weapon);
+            onSelectWeapon(weapon); // Select the new weapon
+        }
     };
 
 
@@ -40,7 +48,8 @@ function PickWeapon({ weaponType, onSelectWeapon }) {
           <p>Loading weapons...</p>
         ) : (
             weapons.map((weapon, index) => (
-            <div className="icon" key={index} onClick={() => handleClick(weapon)}>
+            <div className={`icon ${selectedWeapon === weapon ? 'selected' : ''}`} 
+            key={index} onClick={() => handleClick(weapon)}>              
               <Icon name={weapon} type="weapon" />
             </div>          
           ))

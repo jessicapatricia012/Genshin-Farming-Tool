@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import './style/BuildCharsContainer.css';
 import './style/CharBox.css';
 import Icon from './Icon';
-import WeaponIcon from './WeaponIcon';
+import WeaponArtifactHolder from './WeaponArtifactHolder';
 import { closestCorners, DndContext, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import genshindb from 'genshin-db';
 import { getWeaponURL, getBackground, getArtifactURL } from '../fuctions/util';
 
-
-
-function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick, onArtifactClick, selectedCharacter, selectedWeapon, setCurrentCharBoxId }) {
-  // const [charComponents, setCharComponents] = useState([]);
+function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick, onArtifactClick, selectedCharacter }) {
   const character = genshindb.characters(selectedCharacter);
-  // console.log(character.id);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { delay: 150},
@@ -36,19 +32,8 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
     setCharComponents(prevComponents => prevComponents.filter(char => char.id !== id));
   };
 
-  const handleWeaponSelect = (weaponName) => {
-    setCharComponents(prevChars =>
-      prevChars.map(char =>
-        char.id === currentCharBoxId ? { ...char, weapon: weaponName } : char
-      )
-    );
-  };
-  ;
-
   const handleDragMove = (event) => {
-    if (!event || !event.active || !event.over) {
-      return; // Exit early if the event is malformed
-    }
+    if (!event || !event.active || !event.over) return;
   };
 
   useEffect(() => {
@@ -56,7 +41,6 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
       addCharBox(); // Add the character when a new one is selected
     }
   }, [selectedCharacter]);
-
 
 
   const getBoxPos = (id) => charComponents.findIndex(box =>
@@ -85,10 +69,8 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
                 onRemove={handleRemoveCharBox}
                 onWeaponClick={onWeaponClick}
                 onArtifactClick={onArtifactClick}
-                selectedWeapon={selectedWeapon}
                 weaponName={charBox.weapon} 
                 artifacts={charBox.artifacts}
-                setCurrentCharBoxId={setCurrentCharBoxId}
               />
           ))}
           </SortableContext>
@@ -99,7 +81,7 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
 }
 
 
-function CharBox({ id, setCurrentCharBoxId, weaponName, charName, artifacts, onRemove,  onWeaponClick, onArtifactClick }) {
+function CharBox({ id, weaponName, charName, artifacts, onRemove,  onWeaponClick, onArtifactClick }) {
   const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id})
   const talentName = genshindb.talents(charName).costs.lvl2[1].name;
   const ascMaterial = genshindb.characters(charName).costs.ascend2[1].name;
@@ -127,8 +109,8 @@ function CharBox({ id, setCurrentCharBoxId, weaponName, charName, artifacts, onR
       </div>
 
       <div className="otherIcon" id="weaponIcon" onClick={() => { 
-          setCurrentCharBoxId(id); // Remember which character was clicked
-          onWeaponClick(weaponType);
+          // setCurrentCharBoxId(id); // Remember which character was clicked
+          onWeaponClick(weaponType, id);
           }}>
           {weaponName ? (
             <img 
@@ -137,13 +119,13 @@ function CharBox({ id, setCurrentCharBoxId, weaponName, charName, artifacts, onR
               alt={weaponName} 
               style={ {background : getBackground(weaponName,"weapon") }} />  // If selectedWeapon, display Icon for weapon
           ) : (
-            <WeaponIcon key={weaponType} type={weaponType} />  // Otherwise, display WeaponIcon for character's weapon
+            <WeaponArtifactHolder key={weaponType} type={weaponType} />  // Otherwise, display WeaponIcon for character's weapon
           )}
       </div>
 
       <div className="otherIcon" id="artifactIcon" onClick={() => { 
-          setCurrentCharBoxId(id); // Remember which character was clicked
-          onArtifactClick();
+          // setCurrentCharBoxId(id); // Remember which character was clicked
+          onArtifactClick(id);
           }}>
           {artifacts.length > 0 ? (
         <>
@@ -165,7 +147,7 @@ function CharBox({ id, setCurrentCharBoxId, weaponName, charName, artifacts, onR
             )}
         </>
           ) : (
-            <WeaponIcon key={artifacts[0]} type={"artifact"} />          
+            <WeaponArtifactHolder key={artifacts[0]} type={"artifact"} />          
           )}
       </div>
 

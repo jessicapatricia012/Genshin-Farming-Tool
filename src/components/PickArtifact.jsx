@@ -3,12 +3,10 @@ import "./style/PickPanel.css";
 import genshindb from 'genshin-db';
 import Icon from "./Icon";
 
-function PickArtifact({ artifactName, onSelectArtifact }) {
+function PickArtifact({ onSelectArtifact, selectedArtifacts }) {
 
     const [artifacts, setArtifacts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedArtifacts, setSelectedArtifacts] = useState([]);
-
 
     useEffect(() => {
         setLoading(true);  
@@ -26,7 +24,7 @@ function PickArtifact({ artifactName, onSelectArtifact }) {
         } finally {
             setLoading(false);  
         }
-      }, [artifactName]); 
+      }, []); 
 
 
     const handleClick = (artifact) => {
@@ -36,7 +34,6 @@ function PickArtifact({ artifactName, onSelectArtifact }) {
         } else if (selectedArtifacts.length < 2) { // If there are fewer than 2 selected, add this artifact
             updatedArtifacts = [...selectedArtifacts, artifact];
         }
-        setSelectedArtifacts(updatedArtifacts);
         onSelectArtifact(updatedArtifacts);
     };
 

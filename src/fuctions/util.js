@@ -56,10 +56,10 @@ export const getBackground = (name, type) => {
     return "";
 };
 
-export const getDefaultWeapon = (weaponType) => {
-    if (weaponTypeDefault[weaponType])
+export const getHolderURL = (weaponType) => {
+    if (weaponTypeDefault[weaponType]) // weapon
         return weaponTypeDefault[weaponType];
-
+    // artifact
     return 'https://static.wikia.nocookie.net/gensin-impact/images/6/6a/Icon_Inventory_Artifacts.png';
 };
 

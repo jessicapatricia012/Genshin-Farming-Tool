@@ -5,20 +5,19 @@ import PickWeapon from "./components/PickWeapon";
 import PickArtifact from "./components/PickArtifact";
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
-import { artifacts } from "genshin-db";
-
 
 
 function App() {
   const [isCharacterPanelOpen, setIsCharacterPanelOpen] = useState(false);
   const [isWeaponPanelOpen, setIsWeaponPanelOpen] = useState(false);
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
+  
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [weaponType, setWeaponType] = useState(null);
-  const [weaponName, setWeaponName] = useState(null);
-  const [artifactName, setArtifactName] = useState(null);
   const [currentCharBoxId, setCurrentCharBoxId] = useState(null);
+
   const [charComponents, setCharComponents] = useState([]);
+
   const characterPanelRef = useRef(null); // Reference to the sliding panel
   const weaponPanelRef = useRef(null);
   const artifactPanelRef = useRef(null);
@@ -58,9 +57,9 @@ function App() {
         char.id === currentCharBoxId ? { ...char, weapon: weaponName } : char
       )
     );
-    setIsWeaponPanelOpen(false); // Close panel after selection
   };
-  const openWeaponPanel = (weaponType) => {
+  const openWeaponPanel = (weaponType, charId) => {
+    setCurrentCharBoxId(charId);
     setWeaponType(weaponType);
     setIsWeaponPanelOpen(true);
   };
@@ -73,24 +72,26 @@ function App() {
       )
     );
   };
-  const openArtifactPanel = () => {
+  const openArtifactPanel = (charId) => {
+    setCurrentCharBoxId(charId);
     setIsArtifactPanelOpen(true);
   };
-
 
 
   return (
     <div id="App">
       <div className={`slidePanel ${isCharacterPanelOpen ? "shifted" : ""}`} ref={characterPanelRef}>
-        <PickChar onSelectCharacter={handleCharacterSelect}></PickChar>
+        <PickChar onSelectCharacter={handleCharacterSelect} charComponents={charComponents}></PickChar>
       </div>
 
       <div className={`slidePanel ${isWeaponPanelOpen ? "shifted" : ""}`} ref={weaponPanelRef}>
-        <PickWeapon onSelectWeapon={handleWeaponSelect} weaponType={weaponType}/>
+        <PickWeapon onSelectWeapon={handleWeaponSelect} weaponType={weaponType}
+        selectedWeapon={charComponents.find((char) => char.id === currentCharBoxId)?.weapon || null}/>
       </div>
 
       <div className={`slidePanel ${isArtifactPanelOpen ? "shifted" : ""}`} ref={artifactPanelRef}>
-        <PickArtifact onSelectArtifact={handleArtifactSelect} artifactName={artifactName}/>
+        <PickArtifact onSelectArtifact={handleArtifactSelect}
+        selectedArtifacts={charComponents.find((char) => char.id === currentCharBoxId)?.artifacts || []}/>
       </div>
       
       <div id="contentWrapper" className={isCharacterPanelOpen || isWeaponPanelOpen || isArtifactPanelOpen ? "shifted" : ""}>
@@ -104,11 +105,8 @@ function App() {
             charComponents={charComponents} 
             setCharComponents={setCharComponents}
             selectedCharacter={selectedCharacter}
-            selectedWeapon={weaponName}
             onWeaponClick={openWeaponPanel}
-            onArtifactClick={openArtifactPanel}
-            setCurrentCharBoxId={setCurrentCharBoxId}
-            currentCharBoxId={currentCharBoxId}/>
+            onArtifactClick={openArtifactPanel}/>
         </div>
         <ToFarmComponent />
       </div>

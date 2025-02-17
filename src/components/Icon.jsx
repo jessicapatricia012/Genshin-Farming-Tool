@@ -13,7 +13,6 @@ function Icon({ name, type }) {
             setImageUrl(getWeaponURL(name));
         else if (type === 'artifact')
             setImageUrl(getArtifactURL(name));
-
     }, [name, type]);
 
     useEffect(() => {
