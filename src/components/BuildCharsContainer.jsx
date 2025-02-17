@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import './style/BuildCharsContainer.css';
 import './style/CharBox.css';
-import CharIcon from './CharIcon';
+import Icon from './Icon';
+import WeaponIcon from './WeaponIcon';
 import { closestCorners, DndContext, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -10,13 +11,13 @@ import genshindb, { characters } from 'genshin-db';
 
 
 
-function BuildCharsContainer({ onImageClick, selectedCharacter,  currentCharBoxId}) {
+function BuildCharsContainer({ onWeaponClick, onImageClick, selectedCharacter, selectedWeapon, currentCharBoxId}) {
   const [charComponents, setCharComponents] = useState([]);
   const character = genshindb.characters(selectedCharacter);
-  console.log(character.id);
+  // console.log(character.id);
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { delay: 100},
+      activationConstraint: { delay: 150},
     })
   );
   
@@ -81,6 +82,7 @@ function BuildCharsContainer({ onImageClick, selectedCharacter,  currentCharBoxI
                 charName={charBox.name}
                 char={charBox.char}
                 onRemove={handleRemoveCharBox}
+                onWeaponClick={onWeaponClick}
               />
           ))}
           </SortableContext>
@@ -91,19 +93,17 @@ function BuildCharsContainer({ onImageClick, selectedCharacter,  currentCharBoxI
 }
 
 
-function CharBox({ id, onImageClick, selectedCharacter, isSelected, char, charName, onRemove  }) {
+function CharBox({ id, selectedCharacter, isSelected, char, charName, onRemove,  onWeaponClick }) {
   const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id})
   const talentName = genshindb.talents(charName).costs.lvl2[1].name;
   const ascMaterial = genshindb.characters(charName).costs.ascend2[1].name;
-  console.log(ascMaterial);
-
+  const weaponType = genshindb.characters(charName)?.weaponType;
+  // console.log(weaponType);
 
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
   }
-
-
 
   useEffect(() => {
     if (charName) {
@@ -112,21 +112,29 @@ function CharBox({ id, onImageClick, selectedCharacter, isSelected, char, charNa
     }
   }, [charName]);
 
+  const handleWeaponClick = () => {
+
+  }
+
   return (
     <div className="charBox" ref ={setNodeRef} style={style} {...attributes} {...listeners}>
-      <div id="charImage" onClick={onImageClick}>
-        <CharIcon characterName={charName}></CharIcon>
-      </div>
-
       <i 
         className="fa-solid fa-xmark" 
         onClick={(e) => {
           e.stopPropagation();  // Prevents event bubbling
-          console.log("Clicked X for ID:", id);  // Debug log
           onRemove(id);  // Remove the character
         }}
       ></i>
 
+      <div id="charImage">
+        <Icon name={charName} type="character"></Icon>
+      </div>
+
+      <div id="weaponIcon" onClick={() => { onWeaponClick(weaponType)}}>
+        <WeaponIcon key={weaponType} weaponType={weaponType} ></WeaponIcon>
+      </div>
+
+    
       <div id="checkBoxes">
         <label>
           <input type="checkbox" className="custom-checkbox" />

@@ -1,39 +1,40 @@
 import React, { useState, useEffect } from "react";
-import "./style/PickChar.css";
-import CharIcon from "./CharIcon";
+import "./style/PickPanel.css";
+import Icon from "./Icon";
 import genshindb from 'genshin-db';
 
-function PickChar({ onClose, onSelectCharacter }) {
+function PickChar({ onSelectCharacter }) {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);  
     try {
-      // Fetching character names and rarity from genshin-db
       const charactersName = genshindb.characters('names', { matchCategories: true });
       setCharacters(charactersName);
-      setLoading(false);
     } catch (error) {
       console.error("Error loading characters:", error);
-      setLoading(false);
+    } finally {
+      setLoading(false);  
     }
-  }, []);
+  }, []); 
 
   const handleClick = (characterName) => {
     onSelectCharacter(characterName); 
-    // console.log(characterName);
   };
 
   return (
-    <div className="pickChar">
-      <button onClick={onClose}>X</button>
-      <div id="icons">
+    <div className="pickPanel">
+      <div className="slideHeader" id="charSlideHeader">
+        <input className="searchField" id="charSearchField" type="text" placeholder="Search" />
+      </div>
+      <div className="icons">
         {loading ? (
           <p>Loading characters...</p>
         ) : (
           characters.map((character, index) => (
-            <div id="icon" key={index} onClick={() => handleClick(character)}>
-              <CharIcon characterName={character} />
+            <div className="icon" key={index} onClick={() => handleClick(character)}>
+              <Icon name={character} type="character" />
             </div>          
           ))
         )}

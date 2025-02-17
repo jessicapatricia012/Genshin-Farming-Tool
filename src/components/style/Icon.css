@@ -1,4 +1,4 @@
-#CharIcon {
+#Icon {
     background-color: rgb(224, 217, 217);
     border-radius: 5px;
     height: 122px;
@@ -9,11 +9,6 @@
     overflow: hidden; /* Ensures nothing overflows out of the container */
 }
 
-h4{
-    color: black;
-    position: relative;
-
-}
 
 #imageBox {
     height: 100px;
