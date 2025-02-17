@@ -10,7 +10,12 @@ function PickChar({ onSelectCharacter }) {
   useEffect(() => {
     setLoading(true);  
     try {
-      const charactersName = genshindb.characters('names', { matchCategories: true });
+      let charactersName = genshindb.characters('names', { matchCategories: true });
+      const excludedCharacters = ["Aether", "Lumine"];
+      charactersName = charactersName.filter(character => !excludedCharacters.includes(character));
+      charactersName.sort((a, b) => {
+                          return genshindb.characters(b).rarity - genshindb.characters(a).rarity; // Sort in descending order
+                      });
       setCharacters(charactersName);
     } catch (error) {
       console.error("Error loading characters:", error);

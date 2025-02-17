@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style/Icon.css";
-import { getCharURL,getElementURL, getBackground, getWeaponURL } from '../fuctions/util.js';
+import { getCharURL,getElementURL, getBackground, getWeaponURL, getArtifactURL } from '../fuctions/util.js';
 
 function Icon({ name, type }) {
     const [imageUrl, setImageUrl] = useState("");
@@ -9,8 +9,11 @@ function Icon({ name, type }) {
     useEffect(() => {
         if (type === 'character')
             setImageUrl(getCharURL(name));
-        else
+        else if (type === 'weapon')
             setImageUrl(getWeaponURL(name));
+        else if (type === 'artifact')
+            setImageUrl(getArtifactURL(name));
+
     }, [name, type]);
 
     useEffect(() => {

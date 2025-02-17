@@ -1,51 +1,4 @@
 
-
-hr {
-    border: none;        
-    height: 4px;   
-    background-color: white;
-    width: 50vw;
-    opacity: 1.0;
-}
-
-
-
-h2 {
-    margin-top: 8px;
-}
-
-#addBtn {
-    background-color: rgb(23, 29, 40);
-    height: 40px;
-    width: 40px;
-    margin-top: px;
-
-    color: rgb(237, 236, 200);
-    font-size: 30px;
-    font-weight: bold;
-    font-family: 'Courier New', Courier, monospace;
-    line-height: 26px;  
-
-
-
-    border-width: 3px;
-    border-style: solid;
-    border-color:rgb(237, 236, 200);
-    border-radius: 10px;
-} 
-
-#addBtn:hover {
-    color: rgb(23, 29, 40);
-    background-color: rgb(243, 239, 139);
-    font-weight: bolder;
-
-}
-
-#addBtn:active {
-    color: transparent;
-} 
-
-
 #charsDiv {
     flex-direction: column;
     height: 75vh; 
@@ -53,7 +6,6 @@ h2 {
     overflow-x:hidden; 
     margin-top: 30px;
 }
-
 
 #charsDiv::-webkit-scrollbar {
     width: 8px;    

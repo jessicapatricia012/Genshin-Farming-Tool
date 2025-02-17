@@ -4,7 +4,8 @@
 }
 
 #App {
-  background-color: rgb(23, 29, 40);
+  /* background-color: rgb(23, 29, 40); */
+  background: linear-gradient(rgb(28, 37, 52), rgb(10, 15, 24) 100%);
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -24,7 +25,7 @@
 }
 
 html, body {
-    background-color: rgb(23, 29, 40); /* Set the global background color */
+    /* background-color: rgb(23, 29, 40); */
     margin: 0; /* Remove default margins */
     padding: 0; /* Remove default padding */
     height: 100vh; /* Ensure the body spans the viewport */
@@ -44,6 +45,48 @@ html, body {
 
 #contentWrapper.shifted {
   transform: translateX(18vw); 
+}
+
+
+h2 {
+  margin-top: 8px;
+}
+
+
+#addBtn {
+  background-color: rgb(23, 29, 40);
+  height: 30px;
+  width: 30px;
+  margin-top: 9px;
+
+  color: rgb(237, 236, 200);
+  font-size: 24px;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 2px;  
+
+  border-width: 2px;
+  border-style: solid;
+  border-color:rgb(237, 236, 200);
+  border-radius: 10px;
+} 
+
+#addBtn:hover {
+  color: rgb(23, 29, 40);
+  background-color: rgb(243, 239, 139);
+  font-weight: bolder;
+}
+
+#addBtn:active {
+  color: transparent;
+} 
+
+hr {
+  border: none;        
+  height: 4px;   
+  background-color: white;
+  width: 50vw;
+  opacity: 1.0;
 }
 
 .slidePanel {

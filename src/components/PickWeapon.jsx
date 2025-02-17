@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style/PickPanel.css";
 import genshindb from 'genshin-db';
-import WeaponIcon from "./WeaponIcon";
 import Icon from "./Icon";
 
 function PickWeapon({ weaponType, onSelectWeapon }) {
@@ -13,8 +12,12 @@ function PickWeapon({ weaponType, onSelectWeapon }) {
         setLoading(true);  
         try {
             const weapons = genshindb.weapons(weaponType, { matchCategories: true });
-            if (Array.isArray(weapons)) 
+            if (Array.isArray(weapons)) {
+                weapons.sort((a, b) => {
+                    return genshindb.weapons(b).rarity - genshindb.weapons(a).rarity; // Sort in descending order
+                });
                 setWeapons(weapons);
+            }
         } catch (error) {
             console.error("Error loading characters:", error);
         } finally {
@@ -26,7 +29,6 @@ function PickWeapon({ weaponType, onSelectWeapon }) {
         onSelectWeapon(weapon); 
     };
 
-    console.log(genshindb.weapons("Cashflow").images);
 
   return (
     <div className="pickPanel">

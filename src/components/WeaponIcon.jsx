@@ -3,28 +3,26 @@ import "./style/WeaponIcon.css";
 import { getDefaultWeapon } from '../fuctions/util.js';
 import genshindb from 'genshin-db';
 
-function WeaponIcon({ weaponType }) {
-
+function WeaponIcon({ type }) {
     const [weaponUrl, setWeaponUrl] = useState("");
-    // console.log(weaponType);
 
     useEffect(() => {
-        if (weaponType) {
-            setWeaponUrl(getDefaultWeapon(weaponType));  // Set URL based on weaponType
+        if (type) {
+            setWeaponUrl(getDefaultWeapon(type));  // Set URL based on type
         }
-    }, [weaponType]);
+    }, [type]);
 
-    if (!weaponType) {
-        return <div>Loading weapon...</div>;  // Show loading message if weaponType is not available
+    if (!type) {
+        return <div>Loading weapon...</div>;  // Show loading message if type is not available
     }
 
     return (
         <div id="WeaponIcon">
             <div id="weaponImageBox">
-                <img src={weaponUrl} alt={weaponType} />
+                <img src={weaponUrl} alt={type} className={type === "artifact" ? "artifactImgHolder" : ""}/>
             </div>
             {/* <div id="weaponNameBox">
-                <p>{weaponType}</p>
+                <p>{type}</p>
             </div> */}
         </div>
     );

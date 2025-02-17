@@ -1,28 +1,5 @@
 import genshindb from 'genshin-db';
 
-const nameMapping = {
-    "Jean" : "Qin",
-    "Aether" : "PlayerBoy",
-    "Amber" : "Ambor",
-    "Alhaitham" : "Alhatham",
-    "Baizhu" : "Baizhuer",
-    "Hu Tao" : "Hutao",
-    "Kirara" : "Momoka",
-    "Lan Yan" : "Lanyan",
-    "Lumine" : "PlayerGirl",
-    "Lynette" : "Linette",
-    "Lyney" : "Liney",
-    "Noelle" : "Noel",
-    "Ororon" : "Olorun",
-    "Raiden Shogun" : "Shougun",
-    "Shikanoin Heizou" : "Heizo",
-    "Thoma" : "Tohma",
-    "Xianyun" : "Liuyun",
-    "Yae Miko" : "Yae",
-    "Yanfei" : "Feiyan",
-    "Yun Jin" : "Yunjin",
-};
-
 const elementUrls = {
     "Pyro" : "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Element_Pyro.png",
     "Hydro" : "https://static.wikia.nocookie.net/gensin-impact/images/3/35/Element_Hydro.png",
@@ -43,12 +20,9 @@ const weaponTypeDefault = {
 
 
 export function getCharURL(characterName) {
-    const mappedName = nameMapping[characterName];
-    if (mappedName) {
-        return `https://static-genshin.aza.gg/UI/UI_AvatarIcon_${mappedName}.webp`;
-    } else {
-        return `https://static-genshin.aza.gg/UI/UI_AvatarIcon_${characterName.split(" ").pop()}.webp`;
-    }
+    const fileNameIcon = genshindb.characters(characterName)?.images.filename_icon;
+    return `https://gi.yatta.moe/assets/UI/${fileNameIcon}.png`;
+
 };
 
 export function getElementURL(characterName) {
@@ -61,8 +35,12 @@ export const getBackground = (name, type) => {
     if (type === "character"){
         rarity = genshindb.character(name)?.rarity;
     }
-    else {
+    else if (type === "weapon"){
         rarity= genshindb.weapons(name)?.rarity;
+    } else {
+        console.log(type);
+        const list = genshindb.artifacts(name)?.rarityList;
+        rarity = list[list.length-1]  
     }
     if (rarity === 5) {
         return "linear-gradient(150deg, #885734, #b77831 50%)"; 
@@ -79,10 +57,17 @@ export const getBackground = (name, type) => {
 };
 
 export const getDefaultWeapon = (weaponType) => {
-    return weaponTypeDefault[weaponType];
+    if (weaponTypeDefault[weaponType])
+        return weaponTypeDefault[weaponType];
+
+    return 'https://static.wikia.nocookie.net/gensin-impact/images/6/6a/Icon_Inventory_Artifacts.png';
 };
 
 export function getWeaponURL(weaponName) {
     const fileNameIcon = genshindb.weapons(weaponName)?.images.filename_icon;
     return `https://gi.yatta.moe/assets/UI/${fileNameIcon}.png`;
+};
+
+export function getArtifactURL(name) {
+    return genshindb.artifacts(name)?.images.flower;
 };

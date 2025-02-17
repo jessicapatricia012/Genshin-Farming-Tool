@@ -1,8 +1,8 @@
 #Icon {
     background-color: rgb(224, 217, 217);
     border-radius: 5px;
-    height: 122px;
-    width: 100%;
+    height: auto;
+    width: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

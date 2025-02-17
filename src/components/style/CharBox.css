@@ -1,8 +1,8 @@
 .charBox {
     background-color: rgb(32, 40, 54);
     height: 180px;
-    border-radius: 50px;
-    border-top-right-radius: 10px;
+    border-radius: 30px;
+    border-top-right-radius: 5px;
     margin-bottom: 20px;
     width: 95%;
     padding-top: 0px;
@@ -13,7 +13,7 @@
 }
 
 
-#charImage{
+#charIcon{
     height: 122px;
     width: auto;
     background-color: rgb(77, 77, 77);
@@ -23,15 +23,49 @@
     text-align: center;
 }
 
-#weaponIcon{
+.otherIcon{
     height: 60px;
     width: 60px;
-    /* background-color: rgb(77, 77, 77); */
     margin-top: 60px;
-    border-radius: 5px;
+    border-radius: 7px;
     text-align: center;
     cursor: pointer;
+    border: 1.5px solid transparent; 
 }
+.otherIcon:hover{
+    border-style: solid;
+    border-color: rgb(255, 255, 255, 0.8);;
+}
+.otherIcon:active{
+    border-color: rgb(255, 255, 255, 0.5);
+}
+
+.otherIcon img{
+    border-radius: 5px;
+}
+
+#artifactIcon{
+    position: relative;
+}
+
+#artifactImg1{
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    z-index: 1;
+}
+
+#artifactImg2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    z-index: 2; 
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+
+}
+
 
 #checkBoxes {
     margin-top: 40px;
@@ -68,4 +102,8 @@ input {
 
 .fa-xmark:hover {
     color: rgb(245, 46, 39); 
+}
+
+.fa-xmark:active {
+    color: rgb(245, 46, 39, 0.5); 
 }
