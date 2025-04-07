@@ -9,8 +9,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { getWeaponURL, getBackground, getArtifactURL } from '../../fuctions/util';
 import genshindb from 'genshin-db';
 
-function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick, onArtifactClick, selectedCharacter }) {
-  const character = genshindb.characters(selectedCharacter);
+function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick, onArtifactClick, selectedCharacterToAdd }) {
 
   // DND KIT STUFF
   const sensors = useSensors(
@@ -30,42 +29,33 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
       return arrayMove(boxes, originalPos, newPos);
     });
   }
+
+  useEffect(() => {
+    if (selectedCharacterToAdd) {
+      addCharBox(); // Add the character when a new one is selected
+    }
+  }, [selectedCharacterToAdd]);
   
   const addCharBox = () => {
-    const existingChar = charComponents.find(char => char.id === character.id); // Check if the character already exists
-  
-    if (!existingChar) {
-      setCharComponents([
-        ...charComponents,
-        { id: character.id, name: selectedCharacter, char: character, weapon: null, artifacts: []}, // Add the new character with its ID and name
-      ]);
-    }
+    setCharComponents(prevChars => [...prevChars, selectedCharacterToAdd]);  
   };
 
   const handleRemoveCharBox = (id) => {
-    setCharComponents(prevComponents => prevComponents.filter(char => char.id !== id));
+    setCharComponents(prevChars => prevChars.filter(char => char.getId() !== id));
   };
 
-  useEffect(() => {
-    if (selectedCharacter) {
-      addCharBox(); // Add the character when a new one is selected
-    }
-  }, [selectedCharacter]);
-  
   return (
       <div id="charsDiv">
         <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragMove={handleDragMove} collisionDetection={closestCorners}>
           <SortableContext items={charComponents} strategy={verticalListSortingStrategy}>
-            {charComponents.map((charBox) => (
+            {charComponents.map((character) => (
               <CharBox
-                key = {charBox.id}
-                id = {charBox.id}
-                charName={charBox.name}
+                key = {character.id}
+                character = {character}
+                id = {character.id}
                 onRemove={handleRemoveCharBox}
                 onWeaponClick={onWeaponClick}
                 onArtifactClick={onArtifactClick}
-                weaponName={charBox.weapon} 
-                artifacts={charBox.artifacts}
               />
           ))}
           </SortableContext>
@@ -75,19 +65,22 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
 }
 
 
-function CharBox({ id, weaponName, charName, artifacts, onRemove,  onWeaponClick, onArtifactClick }) {
+function CharBox({ character, id, onRemove,  onWeaponClick, onArtifactClick  }) {
   const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id})
-  const talentName = genshindb.talents(charName).costs.lvl2[1].name;
-  const ascMaterial = genshindb.characters(charName).costs.ascend2[1].name;
-  const weaponType = genshindb.characters(charName)?.weaponType;
-  const weaponMaterial = genshindb.weapons(weaponName)?.costs.ascend2[1].name;
+  const talentMaterial = character.talentMaterial;
+  const ascensionMaterial = character.ascensionMaterial;
+  const weaponType = character.weaponType;
+  const weaponMaterial = character.weapon?.ascensionMaterial;
+  const artifactSet = character.artifactSet;
+  console.log(character.weapon);
+  console.log(character.weapon.ascensionMaterial);
 
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
   }
-  console.log(artifacts);
 
+  // console.log("CHARACTER: ", artifactSet);
   return (
     <div className="charBox" ref ={setNodeRef} style={style} {...attributes} {...listeners}>
       <i 
@@ -99,18 +92,16 @@ function CharBox({ id, weaponName, charName, artifacts, onRemove,  onWeaponClick
       ></i>
 
       <div id="charIcon">
-        <Icon name={charName} type="character"></Icon>
+        <Icon name={character.name} type="character"></Icon>
       </div>
 
-      <div className="otherIcon" id="weaponIcon" onClick={() => { 
-          onWeaponClick(weaponType, id);
-          }}>
-          {weaponName ? (
+      <div className="otherIcon" id="weaponIcon" onClick={() => { onWeaponClick(weaponType, id); }}>
+          {character.weapon ? (
             <img 
               id="selectedWeaponImg"
-              src={getWeaponURL(weaponName)} 
-              alt={weaponName} 
-              style={ {background : getBackground(weaponName,"weapon") }} />  // If selectedWeapon, display Icon for weapon
+              src={getWeaponURL(character.weapon)} 
+              alt={character.weapon} 
+              style={ {background : getBackground(character.weapon,"weapon") }} />  // If selectedWeapon, display Icon for weapon
           ) : (
             <WeaponArtifactHolder key={weaponType} type={weaponType} />  // Otherwise, display WeaponIcon for character's weapon
           )}
@@ -119,46 +110,44 @@ function CharBox({ id, weaponName, charName, artifacts, onRemove,  onWeaponClick
       <div className="otherIcon" id="artifactIcon" onClick={() => { 
           onArtifactClick(id);
           }}>
-          {artifacts.length > 0 ? (
+          {artifactSet?.length > 0 ? (
         <>
-            {artifacts[0] && (
+            {artifactSet[0] && (
                 <img id="artifactImg1"
-                    key={artifacts[0]} // Add key for proper reconciliation
-                    src={getArtifactURL(artifacts[0])} 
-                    alt={artifacts[0]} 
-                    style={{ background: getBackground(artifacts[0], "artifact") }} 
+                    src={artifactSet[0].imageUrl} 
+                    alt={artifactSet[0].name} 
+                    style={{ background: getBackground(artifactSet[0].name, "artifact") }} 
                 />
             )}
-            {artifacts[1] && (
+            {artifactSet[1] && (
                 <img id="artifactImg2"
-                    key={artifacts[1]} // Add key for proper reconciliation
-                    src={getArtifactURL(artifacts[1])} 
-                    alt={artifacts[1]} 
-                    style={{ background: getBackground(artifacts[1], "artifact") }} 
+                    src={artifactSet[1].imageUrl} 
+                    alt={artifactSet[1].name} 
+                    style={{ background: getBackground(artifactSet[1].name, "artifact") }} 
                 />
             )}
         </>
           ) : (
-            <WeaponArtifactHolder key={artifacts[0]} type={"artifact"} />          
+            <WeaponArtifactHolder  type={"artifact"} />          
           )}
       </div>
 
       <div id="checkBoxes">
         <label>
           <input type="checkbox" className="custom-checkbox" />
-          {ascMaterial}
+          {ascensionMaterial}
         </label>
         <label>
           <input type="checkbox" className="custom-checkbox" />
-          {weaponName ? weaponMaterial : "[weapon material]"}
+          {character.weapon ? character.weapon?.ascensionMaterial : "[weapon material]"}
         </label>
         <label>
           <input type="checkbox" className="custom-checkbox" />
-          {artifacts ? artifacts[0] : "[artifact]"}
+          {artifactSet ? artifactSet[0]?.name : "[artifact]"}
         </label>
         <label>
           <input type="checkbox" className="custom-checkbox" />
-          {talentName}
+          {talentMaterial}
         </label>
       </div>
     </div>

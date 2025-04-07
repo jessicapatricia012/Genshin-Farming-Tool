@@ -5,14 +5,14 @@ import PickWeapon from "./components/PickWeapon";
 import PickArtifact from "./components/PickArtifact";
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
-
+import { Character, Weapon } from "../model/Character";
 
 function App() {
   const [isCharacterPanelOpen, setIsCharacterPanelOpen] = useState(false);
   const [isWeaponPanelOpen, setIsWeaponPanelOpen] = useState(false);
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
   
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [selectedCharacterToAdd, setSelectedCharacterToAdd] = useState(null);
   const [weaponType, setWeaponType] = useState(null);
   const [currentCharBoxId, setCurrentCharBoxId] = useState(null);
 
@@ -42,8 +42,8 @@ function App() {
 
 
   // CHARACTER HANDLER
-  const handleCharacterSelect = (characterName) => {
-    setSelectedCharacter(characterName);
+  const handleCharacterSelectToAdd = (characterName) => {
+    setSelectedCharacterToAdd(new Character(characterName));
     setIsCharacterPanelOpen(false); 
   };
   const openCharacterPanel = () => {
@@ -54,7 +54,7 @@ function App() {
   const handleWeaponSelect = (weaponName) => {
     setCharComponents(prevChars =>
       prevChars.map(char =>
-        char.id === currentCharBoxId ? { ...char, weapon: weaponName } : char
+        char.id === currentCharBoxId ? (char.weapon = weaponName, {...char})  : char
       )
     );
   };
@@ -68,10 +68,11 @@ function App() {
   const handleArtifactSelect = (selectedArtifacts) => {
     setCharComponents(prevChars =>
       prevChars.map(char =>
-        char.id === currentCharBoxId ? { ...char, artifacts: selectedArtifacts } : char
+        char.id === currentCharBoxId ? (char.artifactSets = selectedArtifacts, {...char})  : char
       )
     );
   };
+  
   const openArtifactPanel = (charId) => {
     setCurrentCharBoxId(charId);
     setIsArtifactPanelOpen(true);
@@ -81,7 +82,7 @@ function App() {
   return (
     <div id="App">
       <div className={`slidePanel ${isCharacterPanelOpen ? "shifted" : ""}`} ref={characterPanelRef}>
-        <PickChar onSelectCharacter={handleCharacterSelect} charComponents={charComponents}></PickChar>
+        <PickChar onSelectCharacter={handleCharacterSelectToAdd} charComponents={charComponents}></PickChar>
       </div>
 
       <div className={`slidePanel ${isWeaponPanelOpen ? "shifted" : ""}`} ref={weaponPanelRef}>
@@ -91,7 +92,7 @@ function App() {
 
       <div className={`slidePanel ${isArtifactPanelOpen ? "shifted" : ""}`} ref={artifactPanelRef}>
         <PickArtifact onSelectArtifact={handleArtifactSelect}
-        selectedArtifacts={charComponents.find((char) => char.id === currentCharBoxId)?.artifacts || []}/>
+        selectedArtifacts={charComponents.find((char) => char.id === currentCharBoxId)?.artifactSets || []}/>
       </div>
       
       <div id="contentWrapper" className={isCharacterPanelOpen || isWeaponPanelOpen || isArtifactPanelOpen ? "shifted" : ""}>
@@ -104,7 +105,7 @@ function App() {
             <BuildCharsContainer 
             charComponents={charComponents} 
             setCharComponents={setCharComponents}
-            selectedCharacter={selectedCharacter}
+            selectedCharacterToAdd={selectedCharacterToAdd}
             onWeaponClick={openWeaponPanel}
             onArtifactClick={openArtifactPanel}/>
         </div>

@@ -9,24 +9,28 @@ function PickWeapon({ weaponType, onSelectWeapon, selectedWeapon }) {
     const [loading, setLoading] = useState(true);
     // const [selectedWeapon, setSelectedWeapon] = useState(null); // State to store the selected weapon
 
-    useEffect(() => {
-        setLoading(true);  
-        try {
-            const weapons = genshindb.weapons(weaponType, { matchCategories: true });
-            if (Array.isArray(weapons)) {
-                weapons.sort((a, b) => {
-                    return genshindb.weapons(b).rarity - genshindb.weapons(a).rarity; // Sort in descending order
-                });
-                setWeapons(weapons);
-            }
-        } catch (error) {
-            console.error("Error loading characters:", error);
-        } finally {
-            setLoading(false);  
-        }
-      }, [weaponType]); 
+    // console.log("Selected weapon:", selectedWeapon); // Log the selected weapon
+    // console.log("Weapon type:", weaponType); // Log the weapon type
 
-      const handleClick = (weapon) => {
+
+    useEffect(() => {
+      setLoading(true);  
+      try {
+          const weapons = genshindb.weapons(weaponType, { matchCategories: true });
+          if (Array.isArray(weapons)) {
+              weapons.sort((a, b) => {
+                  return genshindb.weapons(b).rarity - genshindb.weapons(a).rarity; // Sort in descending order
+              });
+              setWeapons(weapons);
+          }
+      } catch (error) {
+          console.error("Error loading characters:", error);
+      } finally {
+          setLoading(false);  
+      }
+    }, [weaponType]); 
+
+    const handleClick = (weapon) => {
         // If the same weapon is clicked again, unselect it, otherwise select the new weapon
         if (selectedWeapon === weapon) {
             // setSelectedWeapon(null);

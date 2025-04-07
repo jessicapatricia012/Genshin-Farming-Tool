@@ -10,13 +10,13 @@ function PickChar({ onSelectCharacter, charComponents }) {
   useEffect(() => {
     setLoading(true);  
     try {
-      let charactersName = genshindb.characters('names', { matchCategories: true });
-      const excludedCharacters = ["Aether", "Lumine"];
-      charactersName = charactersName.filter(character => !excludedCharacters.includes(character));
-      charactersName.sort((a, b) => {
+      let characterNames = genshindb.characters('names', { matchCategories: true });
+      const excludedCharacters = ["Lumine"];
+      characterNames = characterNames.filter(character => !excludedCharacters.includes(character));
+      characterNames.sort((a, b) => {
                           return genshindb.characters(b).rarity - genshindb.characters(a).rarity; // Sort in descending order
                       });
-      setCharacters(charactersName);
+      setCharacters(characterNames);
     } catch (error) {
       console.error("Error loading characters:", error);
     } finally {
@@ -39,9 +39,10 @@ function PickChar({ onSelectCharacter, charComponents }) {
         ) : (
           characters.map((character, index) => (
             <div 
-            className={`icon ${charComponents.some((component) => component.name === character) ? 'disabled' : ''}`}             key={index} 
-            onClick={() => handleClick(character)}>
-              <Icon name={character} type="character" />
+              className={`icon ${charComponents.some((component) => component.name === character) ? 'disabled' : ''}`}             
+              key={index} 
+              onClick={() => handleClick(character)}>
+                <Icon name={character} type="character" />
             </div>          
           ))
         )}
