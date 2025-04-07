@@ -12,7 +12,7 @@ function App() {
   const [isWeaponPanelOpen, setIsWeaponPanelOpen] = useState(false);
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
   
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [selectedCharacterToAdd, setSelectedCharacterNameToAdd] = useState(null);
   const [weaponType, setWeaponType] = useState(null);
   const [currentCharBoxId, setCurrentCharBoxId] = useState(null);
 
@@ -42,8 +42,8 @@ function App() {
 
 
   // CHARACTER HANDLER
-  const handleCharacterSelect = (characterName) => {
-    setSelectedCharacter(characterName);
+  const handleCharacterSelect = (characterNameToAdd) => {
+    setSelectedCharacterNameToAdd(characterNameToAdd);
     setIsCharacterPanelOpen(false); 
   };
   const openCharacterPanel = () => {
@@ -77,6 +77,25 @@ function App() {
     setIsArtifactPanelOpen(true);
   };
 
+  const fetchCharacters = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/characters'); // GET
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setCharComponents(data);  // Update state with fetched characters
+    } catch (err) {
+      console.error('Error fetching characters:', err);
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchCharacters(); // This will retrieve characters from the backend when the app loads
+  }, []);
+
 
   return (
     <div id="App">
@@ -104,7 +123,7 @@ function App() {
             <BuildCharsContainer 
             charComponents={charComponents} 
             setCharComponents={setCharComponents}
-            selectedCharacter={selectedCharacter}
+            toAddCharacterName={selectedCharacterToAdd}
             onWeaponClick={openWeaponPanel}
             onArtifactClick={openArtifactPanel}/>
         </div>

@@ -9,43 +9,15 @@ import { CSS } from '@dnd-kit/utilities';
 import genshindb from 'genshin-db';
 import { getWeaponURL, getBackground, getArtifactURL } from '../fuctions/util';
 
-function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick, onArtifactClick, selectedCharacter }) {
-  const character = genshindb.characters(selectedCharacter);
+function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick, onArtifactClick, toAddCharacterName }) {
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { delay: 150},
     })
   );
-  
-  const addCharBox = () => {
-    const existingChar = charComponents.find(char => char.id === character.id); // Check if the character already exists
-  
-    if (!existingChar) {
-      setCharComponents([
-        ...charComponents,
-        { id: character.id, name: selectedCharacter, char: character, weapon: null, artifacts: []}, // Add the new character with its ID and name
-      ]);
-    }
-  };
-
-  const handleRemoveCharBox = (id) => {
-    setCharComponents(prevComponents => prevComponents.filter(char => char.id !== id));
-  };
-
-  const handleDragMove = (event) => {
-    if (!event || !event.active || !event.over) return;
-  };
-
-  useEffect(() => {
-    if (selectedCharacter) {
-      addCharBox(); // Add the character when a new one is selected
-    }
-  }, [selectedCharacter]);
-
-
   const getBoxPos = (id) => charComponents.findIndex(box =>
     box.id === id )
-
   const handleDragEnd = (event) => {
     const {active, over} = event;
     if(!active || !over || active.id == over.id) return;
@@ -55,22 +27,81 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
       return arrayMove(boxes, originalPos, newPos);
     })
   }
+  const handleDragMove = (event) => {
+    if (!event || !event.active || !event.over) return;
+  };
+
+
+
+  useEffect(() => {
+    if (toAddCharacterName) {
+      const character = genshindb.characters(toAddCharacterName);
+      saveCharacter(character); // Add the character when a new one is selected
+    }
+  }, [toAddCharacterName]);
+  
+
+  const handleRemoveCharBox = (id) => {
+    setCharComponents(prevComponents => prevComponents.filter(char => char.id !== id));
+    removeCharacter(id);
+
+  };
+
+  const saveCharacter = async (character) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/characters', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: character.id, name: toAddCharacterName, weapon: null, artifacts: []}),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to save character');
+      }
+  
+      const newCharacter = await response.json();
+      setCharComponents((prevChars) => [...prevChars, newCharacter]);  // Update state
+    } catch (err) {
+      console.error('Error saving character:', err);
+    }
+  }; 
+  
+  const removeCharacter = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/characters/${id}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete character');
+      }
+  
+      setCharComponents(prevComponents => prevComponents.filter(char => char.id !== id));
+
+    } catch (err) {
+      console.error('Error deleting character:', err);
+    }
+  };
+
+  
 
   return (
       <div id="charsDiv">
         <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragMove={handleDragMove} collisionDetection={closestCorners}>
         
           <SortableContext items={charComponents} strategy={verticalListSortingStrategy}>
-            {charComponents.map((charBox) => (
+            {charComponents.map((char) => (
               <CharBox
-                key = {charBox.id}
-                id = {charBox.id}
-                charName={charBox.name}
+                key = {char.id}
+                id = {char.id}
+                charName={char.name}
                 onRemove={handleRemoveCharBox}
                 onWeaponClick={onWeaponClick}
                 onArtifactClick={onArtifactClick}
-                weaponName={charBox.weapon} 
-                artifacts={charBox.artifacts}
+                weaponName={char.weapon} 
+                artifacts={char.artifacts}
               />
           ))}
           </SortableContext>

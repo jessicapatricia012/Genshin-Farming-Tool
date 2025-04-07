@@ -11,7 +11,7 @@ function PickChar({ onSelectCharacter, charComponents }) {
     setLoading(true);  
     try {
       let charactersName = genshindb.characters('names', { matchCategories: true });
-      const excludedCharacters = ["Aether", "Lumine"];
+      const excludedCharacters = ["Lumine"];
       charactersName = charactersName.filter(character => !excludedCharacters.includes(character));
       charactersName.sort((a, b) => {
                           return genshindb.characters(b).rarity - genshindb.characters(a).rarity; // Sort in descending order
