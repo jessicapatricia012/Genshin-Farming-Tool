@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style/WeaponArtifactHolder.css";
-import { getHolderURL } from '../fuctions/util.js';
+import { getHolderURL } from '../../fuctions/util.js';
 
 function WeaponArtifactHolder({ type }) {
     const [weaponArtifactUrl, setWeaponArtifactUrl] = useState("");

@@ -6,16 +6,30 @@ import WeaponArtifactHolder from './WeaponArtifactHolder';
 import { closestCorners, DndContext, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { getWeaponURL, getBackground, getArtifactURL } from '../../fuctions/util';
 import genshindb from 'genshin-db';
-import { getWeaponURL, getBackground, getArtifactURL } from '../fuctions/util';
 
 function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick, onArtifactClick, selectedCharacter }) {
   const character = genshindb.characters(selectedCharacter);
+
+  // DND KIT STUFF
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { delay: 150},
-    })
+    useSensor(PointerSensor, { activationConstraint: { delay: 150 } })
   );
+  const handleDragMove = (event) => {
+    if (!event || !event.active || !event.over) return;
+  };
+  const getBoxPos = (id) => charComponents.findIndex(box =>
+    box.id === id )
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!active || !over || active.id === over.id) return;
+    setCharComponents((boxes) => {
+      const originalPos = getBoxPos(active.id);
+      const newPos = getBoxPos(over.id);
+      return arrayMove(boxes, originalPos, newPos);
+    });
+  }
   
   const addCharBox = () => {
     const existingChar = charComponents.find(char => char.id === character.id); // Check if the character already exists
@@ -32,34 +46,15 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
     setCharComponents(prevComponents => prevComponents.filter(char => char.id !== id));
   };
 
-  const handleDragMove = (event) => {
-    if (!event || !event.active || !event.over) return;
-  };
-
   useEffect(() => {
     if (selectedCharacter) {
       addCharBox(); // Add the character when a new one is selected
     }
   }, [selectedCharacter]);
-
-
-  const getBoxPos = (id) => charComponents.findIndex(box =>
-    box.id === id )
-
-  const handleDragEnd = (event) => {
-    const {active, over} = event;
-    if(!active || !over || active.id == over.id) return;
-    setCharComponents(boxes => {
-      const originalPos = getBoxPos(active.id);
-      const newPos = getBoxPos(over.id);
-      return arrayMove(boxes, originalPos, newPos);
-    })
-  }
-
+  
   return (
       <div id="charsDiv">
         <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragMove={handleDragMove} collisionDetection={closestCorners}>
-        
           <SortableContext items={charComponents} strategy={verticalListSortingStrategy}>
             {charComponents.map((charBox) => (
               <CharBox
@@ -75,7 +70,6 @@ function BuildCharsContainer({  charComponents, setCharComponents, onWeaponClick
           ))}
           </SortableContext>
         </DndContext>
-
       </div>
   )
 }
@@ -109,7 +103,6 @@ function CharBox({ id, weaponName, charName, artifacts, onRemove,  onWeaponClick
       </div>
 
       <div className="otherIcon" id="weaponIcon" onClick={() => { 
-          // setCurrentCharBoxId(id); // Remember which character was clicked
           onWeaponClick(weaponType, id);
           }}>
           {weaponName ? (
@@ -124,7 +117,6 @@ function CharBox({ id, weaponName, charName, artifacts, onRemove,  onWeaponClick
       </div>
 
       <div className="otherIcon" id="artifactIcon" onClick={() => { 
-          // setCurrentCharBoxId(id); // Remember which character was clicked
           onArtifactClick(id);
           }}>
           {artifacts.length > 0 ? (
@@ -169,8 +161,6 @@ function CharBox({ id, weaponName, charName, artifacts, onRemove,  onWeaponClick
           {talentName}
         </label>
       </div>
-
-      {/* <i className="fa-solid fa-grip-lines"></i> */}
     </div>
   );
 }

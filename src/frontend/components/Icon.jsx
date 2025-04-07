@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style/Icon.css";
-import { getCharURL,getElementURL, getBackground, getWeaponURL, getArtifactURL } from '../fuctions/util.js';
+import { getCharURL,getElementURL, getBackground, getWeaponURL, getArtifactURL } from '../../fuctions/util.js';
 
 function Icon({ name, type }) {
     const [imageUrl, setImageUrl] = useState("");
